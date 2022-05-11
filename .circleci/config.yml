@@ -25,7 +25,8 @@ jobs:
     - checkout
     - run:
         name: "Build app changes"
-        command: echo "building app changes"
+        command: "echo hello world"
+        # command: "mvn clean package -Dspring.datasource.url=jdbc:oracle:thin:@127.0.0.1:49161/xe -Dspring.datasource.username=system -Dspring.datasource.password=oracle -Dspring.liquibase.change-log=classpath:db/changelog/changelog_version-3.2.oracle.sql -Dserver.port=8086 -Duser.timezone=CST"
 
 
 workflows:
