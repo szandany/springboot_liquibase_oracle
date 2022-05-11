@@ -2,25 +2,36 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  inspect_db_code:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: liquibase/liquibase:latest
+
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Run Liquibase version"
+          command: "liquibase --version"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+      - run: 
+          name: "Run Liquibase Quality Checks"
+          command: "liquibase --changeLogFile=src/main/resources/db/changelog/changelog_version-3.2.oracle.sql checks run"
+
+  
+  build:
+    docker:
+      - image: maven:3.3-jdk-8
+    steps:
+    - checkout
+    - run:
+        name: "Build app changes"
+        command: echo "building app changes"
+
+
 workflows:
-  say-hello-workflow:
+  ci_workflow:
     jobs:
-      - say-hello
+      - inspect_db_code
+      - build:
+          requires:
+            - inspect_db_code
