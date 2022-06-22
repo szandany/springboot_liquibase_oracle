@@ -1,9 +1,6 @@
 --liquibase formatted sql
 
 --changeset EricM:1
-
--- GRANT privileges ON object TO user;
-
 CREATE TABLE SALES (ID NUMBER NOT NULL, ITEM VARCHAR2(50 BYTE) NOT NULL, QUANTITY NUMBER(*, 0) NOT NULL, AMOUNT FLOAT(22) NOT NULL, CONSTRAINT SALES_PK PRIMARY KEY (ID));
 --rollback DROP TABLE SALES;
 
